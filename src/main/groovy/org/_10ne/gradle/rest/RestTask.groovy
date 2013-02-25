@@ -55,7 +55,7 @@ class RestTask extends DefaultTask {
 
         println "Executing a '$httpMethod' request to '$uri'"
 
-        HttpResponseDecorator responseDecorator = client."$httpMethod"(params)
+        HttpResponseDecorator responseDecorator = client."${httpMethod.toLowerCase()}"(params)
 
         println "Received response: ${responseDecorator.getData()}"
     }

@@ -1,0 +1,27 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+group = 'org._10ne.gradle'
+version = '0.1-SNAPSHOT'
+
+buildscript {
+    apply from: 'gradle/Bintray.gradle'
+}
+
+repositories {
+    bintray.jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    groovy 'org.codehaus.groovy:groovy-all:2.1.1'
+    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.6') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+}
+
+task wrapper(type: Wrapper, description: 'Gradle Wrapper task') {
+    gradleVersion = '1.4'
+}

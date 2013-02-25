@@ -19,7 +19,7 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 
 group = 'org._10ne.gradle'
-version = '0.1-SNAPSHOT'
+version = '0.2-SNAPSHOT'
 
 buildscript {
     apply from: 'gradle/Bintray.gradle'

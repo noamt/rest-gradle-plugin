@@ -41,3 +41,31 @@ dependencies {
 task wrapper(type: Wrapper, description: 'Gradle Wrapper task') {
     gradleVersion = '1.4'
 }
+
+configure(install.repositories.mavenInstaller) {
+    pom.project {
+        name('rest-gradle-plugin')
+        description('A Gradle plugin that provides a task infrastructure to perform REST requests.')
+        url('https://github.com/noamt/rest-gradle-plugin')
+        inceptionYear '2013'
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        scm {
+            url "https://github.com/noamt/rest-gradle-plugin.git"
+        }
+        developers {
+            developer {
+                id 'noamt'
+                name 'Noam Y. Tenne'
+                roles {
+                    role 'Developer'
+                }
+            }
+        }
+    }
+}

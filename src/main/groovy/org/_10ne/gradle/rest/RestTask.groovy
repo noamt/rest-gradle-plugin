@@ -20,15 +20,17 @@ import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 import org.apache.commons.lang.StringUtils
 import org.gradle.api.DefaultTask
+import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.TaskExecutionException
 
 /**
  * @author Noam Y. Tenne
  */
 class RestTask extends DefaultTask {
+
+    def client
 
     @Input String httpMethod
     @Input Object uri
@@ -45,15 +47,16 @@ class RestTask extends DefaultTask {
 
     RestTask() {
         httpMethod = 'get'
+        client = new RESTClient()
     }
 
     @TaskAction
     void executeRequest() {
-        if (!uri || StringUtils.isBlank(uri.toString())) {
-            throw new TaskExecutionException(this, new IllegalArgumentException('No resource URI provided'))
+        if (!uri || StringUtils.isBlank(uri)) {
+            throw new InvalidUserDataException('No resource URI provided')
         }
 
-        def client = new RESTClient(uri)
+        client.uri = uri
         if (StringUtils.isNotBlank(username)) {
             client.auth.basic(username, password)
         }

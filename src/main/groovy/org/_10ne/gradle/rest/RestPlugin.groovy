@@ -26,6 +26,6 @@ class RestPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        project.task("rest", type: RestTask)
+        project.task('rest', type: RestTask)
     }
 }

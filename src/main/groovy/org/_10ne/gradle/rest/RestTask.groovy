@@ -19,6 +19,7 @@ package org._10ne.gradle.rest
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 import org.apache.commons.lang.StringUtils
+import org.apache.http.HttpHeaders
 import org.gradle.api.DefaultTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.Input
@@ -30,10 +31,12 @@ import org.gradle.api.tasks.TaskAction
  */
 class RestTask extends DefaultTask {
 
-    def client
+    RESTClient client
 
     @Input String httpMethod
     @Input Object uri
+    @Input
+    @Optional boolean preemptiveAuth
     @Input
     @Optional String username
     @Input
@@ -58,6 +61,9 @@ class RestTask extends DefaultTask {
 
         client.uri = uri
         if (StringUtils.isNotBlank(username)) {
+            if (preemptiveAuth) {
+                client.headers[HttpHeaders.AUTHORIZATION] = "$username:$password".toString().bytes.encodeBase64()
+            }
             client.auth.basic(username, password)
         }
 

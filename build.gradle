@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
+    compile 'org.codehaus.groovy:groovy-all:1.8.9'
     compile('org.codehaus.groovy.modules.http-builder:http-builder:0.6') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.codehaus.groovy', module: 'groovy'
@@ -48,7 +49,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper, description: 'Gradle Wrapper task') {
-    gradleVersion = '1.5'
+    gradleVersion = '1.6'
 }
 
 configure(install.repositories.mavenInstaller) {

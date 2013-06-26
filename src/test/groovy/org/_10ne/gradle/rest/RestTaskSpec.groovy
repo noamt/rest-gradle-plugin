@@ -91,7 +91,7 @@ class RestTaskSpec extends Specification {
         task.executeRequest()
 
         and:
-        headers[HttpHeaders.AUTHORIZATION] == 'dXNlcm5hbWU6cGFzc3dvcmQ='
+        headers[HttpHeaders.AUTHORIZATION] == 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
 
         then:
         1 * mockClient.setUri('bob.com')

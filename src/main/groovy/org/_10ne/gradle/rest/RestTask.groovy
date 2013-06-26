@@ -62,7 +62,7 @@ class RestTask extends DefaultTask {
         client.uri = uri
         if (StringUtils.isNotBlank(username)) {
             if (preemptiveAuth) {
-                client.headers[HttpHeaders.AUTHORIZATION] = "$username:$password".toString().bytes.encodeBase64()
+                client.headers[HttpHeaders.AUTHORIZATION] = 'Basic ' + ("$username:$password".toString().bytes.encodeBase64())
             }
             client.auth.basic(username, password)
         }

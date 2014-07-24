@@ -106,4 +106,40 @@ class RestTaskSpec extends Specification {
         }
         1 * mockResponse.getData() >> { 'somedata' }
     }
+
+    def 'Configure and execute a request with a custom header'() {
+        setup:
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            httpMethod = 'post'
+            uri = 'bob.com'
+            username = 'username'
+            password = 'password'
+            requestContentType = 'requestContentType'
+            requestBody = 'requestBody'
+            contentType = 'contentType'
+            requestHeaders = ['key': 'value']
+        }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockAuth = Mock(AuthConfig)
+
+        def mockResponse = Mock(HttpResponseDecorator)
+
+        def headers = [:]
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        1 * mockClient.getAuth() >> { mockAuth }
+        1 * mockClient.getHeaders() >> { headers }
+        1 * mockAuth.basic('username', 'password')
+        1 * mockClient.post(_ as Map) >> { Map params ->
+            assert headers.get('key') == 'value'
+            mockResponse
+        }
+        1 * mockResponse.getData() >> { 'somedata' }
+    }
 }

@@ -32,6 +32,7 @@ The plugin adds a new task named `rest`. This task exposes the following propert
  * contentType - The expected content type of both request and response. Type: groovyx.net.http.ContentType / String.
  * requestContentType - The expected content type of the request. Overrides the `contentType` parameter. Type: groovyx.net.http.ContentType / String.
  * requestBody - The request content. Type: Object.
+ * requestHeaders - Additional request headers. Type: Map.
 
 For example, a POST request task:
 
@@ -42,4 +43,5 @@ For example, a POST request task:
         password = 'password'
         requestBody = [battleCry: 'FOR LEEROY JENKINS!']
         contentType = groovyx.net.http.ContentType.JSON
+        requestHeaders = [customHeader: 'WoW']
     }

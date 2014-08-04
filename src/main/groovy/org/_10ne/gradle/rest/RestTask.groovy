@@ -47,6 +47,8 @@ class RestTask extends DefaultTask {
     @Optional Object contentType
     @Input
     @Optional Object requestBody
+    @Input
+    @Optional Object requestHeaders
 
     RestTask() {
         httpMethod = 'get'
@@ -65,6 +67,10 @@ class RestTask extends DefaultTask {
                 client.headers[HttpHeaders.AUTHORIZATION] = 'Basic ' + ("$username:$password".toString().bytes.encodeBase64())
             }
             client.auth.basic(username, password)
+        }
+
+        if (requestHeaders instanceof Map) {
+            client.headers.putAll(requestHeaders);
         }
 
         def params = [:]

@@ -15,6 +15,7 @@
  */
 
 package org._10ne.gradle.rest
+
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 import org.apache.commons.lang.StringUtils

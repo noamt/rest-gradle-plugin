@@ -42,6 +42,10 @@ class RestTaskSpec extends Specification {
             requestContentType = 'requestContentType'
             requestBody = 'requestBody'
             contentType = 'contentType'
+
+            doLast({
+                println serverResponse.getData()
+            })
         }
         def mockClient = Mock(RESTClient)
         task.client = mockClient
@@ -63,7 +67,6 @@ class RestTaskSpec extends Specification {
             assert params.requestContentType == 'requestContentType'
             mockResponse
         }
-        1 * mockResponse.getData() >> { 'somedata' }
     }
 
     def 'Configure and execute a preemptive authentication request'() {
@@ -90,9 +93,6 @@ class RestTaskSpec extends Specification {
         when:
         task.executeRequest()
 
-        and:
-        headers[HttpHeaders.AUTHORIZATION] == 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
-
         then:
         1 * mockClient.setUri('bob.com')
         1 * mockClient.getHeaders() >> { headers }
@@ -102,9 +102,9 @@ class RestTaskSpec extends Specification {
             assert params.body == 'requestBody'
             assert params.contentType == 'contentType'
             assert params.requestContentType == 'requestContentType'
+            assert headers.get(HttpHeaders.AUTHORIZATION) == 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
             mockResponse
         }
-        1 * mockResponse.getData() >> { 'somedata' }
     }
 
     def 'Configure and execute a request with a custom header'() {
@@ -140,7 +140,6 @@ class RestTaskSpec extends Specification {
             assert headers.get('key') == 'value'
             mockResponse
         }
-        1 * mockResponse.getData() >> { 'somedata' }
     }
 
     def 'Configure and execute a request using a proxy'() {

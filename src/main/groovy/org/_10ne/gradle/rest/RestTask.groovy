@@ -55,6 +55,15 @@ class RestTask extends DefaultTask {
         client = new RESTClient()
     }
 
+    void configureProxy(String protocol) {
+        String proxyHost = System.getProperty(protocol.toLowerCase() + ".proxyHost", "")
+        int proxyPort = System.getProperty(protocol.toLowerCase() + ".proxyPort", "0") as int
+        if (proxyHost.length() > 0 && proxyPort > 0) {
+            println "Using " + protocol.toUpperCase() + " proxy: " + proxyHost + ":" + proxyPort
+            client.setProxy(proxyHost, proxyPort, protocol)
+        }
+    }
+
     @TaskAction
     void executeRequest() {
         if (!uri || StringUtils.isBlank(uri)) {
@@ -68,6 +77,9 @@ class RestTask extends DefaultTask {
             }
             client.auth.basic(username, password)
         }
+
+        configureProxy('http')
+        configureProxy('https')
 
         if (requestHeaders instanceof Map) {
             client.headers.putAll(requestHeaders);

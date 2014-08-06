@@ -142,4 +142,31 @@ class RestTaskSpec extends Specification {
         }
         1 * mockResponse.getData() >> { 'somedata' }
     }
+
+    def 'Configure and execute a request using a proxy'() {
+        setup:
+        System.setProperty('http.proxyHost', "www.abc.com")
+        System.setProperty('http.proxyPort', "8080")
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            httpMethod = 'post'
+            uri = 'bob.com'
+            requestContentType = 'requestContentType'
+            requestBody = 'requestBody'
+            contentType = 'contentType'
+        }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockResponse = Mock(HttpResponseDecorator)
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        1 * mockClient.setProxy("www.abc.com", 8080, "http")
+        1 * mockClient.post(_ as Map) >> { Map params ->
+            mockResponse
+        }
+    }
 }

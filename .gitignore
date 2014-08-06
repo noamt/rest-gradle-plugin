@@ -3,3 +3,5 @@
 .idea
 .gradle
 build
+*.ipr
+*.iws

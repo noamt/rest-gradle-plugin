@@ -6,7 +6,7 @@
 
 The plugin can be installed using the following snippets
 
-==== Gradle 1.x ====
+==== Plugin version 0.1.x ====
 
 [source,groovy]
 ----
@@ -16,14 +16,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org._10ne.gradle:rest-gradle-plugin:0.3'
+        classpath 'org._10ne.gradle:rest-gradle-plugin:0.1.1'
     }
 }
 
 apply plugin: 'rest'
 ----
 
-==== Gradle 2.x ====
+==== Plugin version 0.3.x ====
 
 [source,groovy]
 ----

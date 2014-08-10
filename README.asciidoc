@@ -4,24 +4,41 @@
 
 === Installation ===
 
-The plugin can be installed using the following snippet
+The plugin can be installed using the following snippets
+
+==== Gradle 1.x ====
 
 [source,groovy]
 ----
 buildscript {
     repositories {
-        maven { url 'http://dl.bintray.com/content/noamt/gradle-plugins' }
         jcenter()
     }
 
     dependencies {
-        classpath 'org._10ne.gradle:rest-gradle-plugin:0.1'
+        classpath 'org._10ne.gradle:rest-gradle-plugin:0.3'
     }
 }
 
 apply plugin: 'rest'
 ----
 
+==== Gradle 2.x ====
+
+[source,groovy]
+----
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org._10ne.gradle:rest-gradle-plugin:0.3'
+    }
+}
+
+apply plugin: 'org.10ne.rest'
+----
 === Usage ===
 
 The plugin adds a new task named `rest`. This task exposes the following properties::

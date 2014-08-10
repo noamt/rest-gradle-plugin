@@ -56,10 +56,10 @@ class RestTask extends DefaultTask {
     }
 
     void configureProxy(String protocol) {
-        String proxyHost = System.getProperty(protocol.toLowerCase() + ".proxyHost", "")
-        int proxyPort = System.getProperty(protocol.toLowerCase() + ".proxyPort", "0") as int
-        if (proxyHost.length() > 0 && proxyPort > 0) {
-            println "Using " + protocol.toUpperCase() + " proxy: " + proxyHost + ":" + proxyPort
+        String proxyHost = System.getProperty("${protocol}.proxyHost", '')
+        int proxyPort = System.getProperty("${protocol}.proxyPort", '0') as int
+        if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
+            println "Using ${protocol.toUpperCase()} proxy: $proxyHost:$proxyPort"
             client.setProxy(proxyHost, proxyPort, protocol)
         }
     }

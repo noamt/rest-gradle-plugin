@@ -145,8 +145,8 @@ class RestTaskSpec extends Specification {
 
     def 'Configure and execute a request using a proxy'() {
         setup:
-        System.setProperty('http.proxyHost', "www.abc.com")
-        System.setProperty('http.proxyPort', "8080")
+        System.setProperty("${protocol}.proxyHost", 'www.abc.com')
+        System.setProperty("${protocol}.proxyPort", port.toString())
         Task task = project.tasks.create(name: 'request', type: RestTask) {
             httpMethod = 'post'
             uri = 'bob.com'
@@ -164,9 +164,14 @@ class RestTaskSpec extends Specification {
 
         then:
         1 * mockClient.setUri('bob.com')
-        1 * mockClient.setProxy("www.abc.com", 8080, "http")
+        1 * mockClient.setProxy('www.abc.com', port, protocol)
         1 * mockClient.post(_ as Map) >> { Map params ->
             mockResponse
         }
+
+        where:
+        protocol | port
+        'http' | 8080
+        'https' | 8443
     }
 }

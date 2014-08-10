@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '3.0.1')
+    }
+}
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'maven'
 apply plugin: 'project-reports'
 
 group = 'org._10ne.gradle'
@@ -36,13 +47,8 @@ dependencies {
     testCompile 'cglib:cglib-nodep:2.2.2'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
 }
 
 task wrapper(type: Wrapper, description: 'Gradle Wrapper task') {
@@ -75,4 +81,34 @@ configure(install.repositories.mavenInstaller) {
             }
         }
     }
+}
+
+artifactory {
+    contextUrl = 'https://oss.jfrog.org'
+    resolve {
+        repoKey = 'remote-repos'
+        username = ''
+        password = ''
+    }
+    publish {
+        defaults {
+            publishArtifacts = true
+        }
+    }
+}
+
+publishing {
+    publications {
+        mainPub(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
+    }
+}
+
+artifactoryPublish {
+    publications(publishing.publications.mainPub)
 }

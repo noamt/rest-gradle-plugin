@@ -25,7 +25,6 @@ import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
-
 /**
  * @author Noam Y. Tenne
  */
@@ -49,6 +48,8 @@ class RestTask extends DefaultTask {
     @Optional Object requestBody
     @Input
     @Optional Object requestHeaders
+
+    HttpResponseDecorator serverResponse
 
     RestTask() {
         httpMethod = 'get'
@@ -98,8 +99,6 @@ class RestTask extends DefaultTask {
 
         println "Executing a '$httpMethod' request to '$uri'"
 
-        HttpResponseDecorator responseDecorator = client."${httpMethod.toLowerCase()}"(params)
-
-        println "Received response: ${responseDecorator.getData()}"
+        serverResponse = client."${httpMethod.toLowerCase()}"(params)
     }
 }

@@ -4,9 +4,11 @@
 
 === Installation ===
 
+This plugin is hosted on Bintray and the latest version is:
+
 image::https://api.bintray.com/packages/noamt/gradle-plugins/REST-Gradle-Plugin/images/download.png[link="https://bintray.com/noamt/gradle-plugins/REST-Gradle-Plugin/_latestVersion"]
 
-See the http://plugins.gradle.org/plugin/org.10ne.rest[Gradle Plugin Portal] for instructions.
+See the http://plugins.gradle.org/plugin/org.10ne.rest[Gradle Plugin Portal] for installation instructions.
 
 === Usage ===
 

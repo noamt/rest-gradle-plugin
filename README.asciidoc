@@ -4,6 +4,8 @@
 
 === Installation ===
 
+image::https://api.bintray.com/packages/noamt/gradle-plugins/REST-Gradle-Plugin/images/download.png[link="https://bintray.com/noamt/gradle-plugins/REST-Gradle-Plugin/_latestVersion"]
+
 See the http://plugins.gradle.org/plugin/org.10ne.rest[Gradle Plugin Portal] for instructions.
 
 === Usage ===

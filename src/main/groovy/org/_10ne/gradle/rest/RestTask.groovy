@@ -26,11 +26,15 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.GradleException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Noam Y. Tenne
  */
 class RestTask extends DefaultTask {
+
+    private static Logger slf4jLogger = LoggerFactory.getLogger(RestTask)
 
     RESTClient client
 
@@ -62,7 +66,7 @@ class RestTask extends DefaultTask {
         String proxyHost = System.getProperty("${protocol}.proxyHost", '')
         int proxyPort = System.getProperty("${protocol}.proxyPort", '0') as int
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
-            logger.info "Using ${protocol.toUpperCase()} proxy: $proxyHost:$proxyPort"
+            slf4jLogger.info "Using ${protocol.toUpperCase()} proxy: $proxyHost:$proxyPort"
             client.setProxy(proxyHost, proxyPort, protocol)
         }
     }
@@ -99,11 +103,11 @@ class RestTask extends DefaultTask {
             params.requestContentType = requestContentType
         }
 
-        logger.info "Executing a '$httpMethod' request to '$uri'"
+        slf4jLogger.info "Executing a '$httpMethod' request to '$uri'"
 
         try {
             serverResponse = client."${httpMethod.toLowerCase()}"(params)
-            logger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
+            slf4jLogger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
         } catch(groovyx.net.http.HttpResponseException e) {
             throw new GradleException(e.getResponse().getData().toString(), e)
         }

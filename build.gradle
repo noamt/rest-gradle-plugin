@@ -85,10 +85,9 @@ artifactory {
     contextUrl = 'https://oss.jfrog.org'
     resolve {
         repoKey = 'remote-repos'
-        username = ''
-        password = ''
     }
     publish {
+        repoKey = 'oss-release-local'
         defaults {
             publishArtifacts = true
         }

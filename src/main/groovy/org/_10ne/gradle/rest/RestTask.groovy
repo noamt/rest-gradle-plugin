@@ -25,6 +25,8 @@ import org.gradle.api.InvalidUserDataException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.GradleException
+
 /**
  * @author Noam Y. Tenne
  */
@@ -60,7 +62,7 @@ class RestTask extends DefaultTask {
         String proxyHost = System.getProperty("${protocol}.proxyHost", '')
         int proxyPort = System.getProperty("${protocol}.proxyPort", '0') as int
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
-            println "Using ${protocol.toUpperCase()} proxy: $proxyHost:$proxyPort"
+            logger.info "Using ${protocol.toUpperCase()} proxy: $proxyHost:$proxyPort"
             client.setProxy(proxyHost, proxyPort, protocol)
         }
     }
@@ -97,8 +99,13 @@ class RestTask extends DefaultTask {
             params.requestContentType = requestContentType
         }
 
-        println "Executing a '$httpMethod' request to '$uri'"
+        logger.info "Executing a '$httpMethod' request to '$uri'"
 
-        serverResponse = client."${httpMethod.toLowerCase()}"(params)
+        try {
+            serverResponse = client."${httpMethod.toLowerCase()}"(params)
+            logger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
+        } catch(groovyx.net.http.HttpResponseException e) {
+            throw new GradleException(e.getResponse().getData().toString(), e)
+        }
     }
 }

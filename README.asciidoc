@@ -21,6 +21,7 @@ The plugin adds a new task named `rest`. This task exposes the following propert
 * requestContentType - The expected content type of the request. Overrides the `contentType` parameter. Type: groovyx.net.http.ContentType / String.
 * requestBody - The request content. Type: Object.
 * requestHeaders - Additional request headers. Type: Map.
+* responseHandler - A custom successful request handler. Type: groovy.lang.Closure. The closure accepts one parameter. May accept the types String, InputStream or Object which falls back to the client's default handler.
 
 For example, a POST request task:
 [source,groovy]
@@ -33,5 +34,9 @@ task attack(type: org._10ne.gradle.rest.RestTask) {
     requestBody = [battleCry: 'FOR LEEROY JENKINS!']
     contentType = groovyx.net.http.ContentType.JSON
     requestHeaders = [customHeader: 'WoW']
+    responseHandler - {
+        //Configured content type is JSON and we let the client's handler parse the response for us
+        assert it.message == 'success'
+    }
 }
 ----

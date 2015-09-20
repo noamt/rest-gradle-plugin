@@ -128,22 +128,30 @@ class RestTask extends DefaultTask {
 
         try {
             serverResponse = client."${httpMethod.toLowerCase()}"(params)
-            if (responseHandler && responseHandler.maximumNumberOfParameters == 1) {
-                def parameterType = responseHandler.parameterTypes.first()
-                if (InputStream.isAssignableFrom(parameterType)) {
-                    responseHandler.call(serverResponse.entity.content)
-                } else if (String.isAssignableFrom(parameterType)) {
-                    serverResponse.entity.content.withStream {
-                        responseHandler.call(it.text)
-                    }
-                } else {
-                    responseHandler.call(serverResponse.data)
-                }
-            } else {
+            if (noResponseHandler()) {
                 slf4jLogger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
+            } else {
+                callResponseHandler()
             }
         } catch (groovyx.net.http.HttpResponseException e) {
             throw new GradleException(e.getResponse().getData().toString(), e)
+        }
+    }
+
+    private boolean noResponseHandler() {
+        !responseHandler || responseHandler.maximumNumberOfParameters != 1
+    }
+
+    void callResponseHandler() {
+        def parameterType = responseHandler.parameterTypes.first()
+        if (InputStream.isAssignableFrom(parameterType)) {
+            responseHandler.call(serverResponse.entity.content)
+        } else if (String.isAssignableFrom(parameterType)) {
+            serverResponse.entity.content.withStream {
+                responseHandler.call(it.text)
+            }
+        } else {
+            responseHandler.call(serverResponse.data)
         }
     }
 }

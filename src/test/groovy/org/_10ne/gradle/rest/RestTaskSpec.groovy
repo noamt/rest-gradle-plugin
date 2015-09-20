@@ -176,17 +176,12 @@ class RestTaskSpec extends Specification {
         'https' | 8443
     }
 
-    def 'Configure and execute a request with a custom response handler'() {
+    def 'Configure and execute a request with a custom string response handler'() {
         setup:
         def responseCalled = false
 
         Task task = project.tasks.create(name: 'request', type: RestTask) {
-            httpMethod = 'post'
             uri = 'bob.com'
-            username = 'username'
-            password = 'password'
-            requestContentType = 'requestContentType'
-            requestBody = 'requestBody'
             contentType = 'contentType'
             responseHandler = { String responseText ->
                 responseCalled = (responseText == 'called')
@@ -194,8 +189,6 @@ class RestTaskSpec extends Specification {
         }
         def mockClient = Mock(RESTClient)
         task.client = mockClient
-
-        def mockAuth = Mock(AuthConfig)
 
         def mockResponse = Mock(HttpResponseDecorator) {
             getEntity() >> {
@@ -210,12 +203,74 @@ class RestTaskSpec extends Specification {
 
         then:
         1 * mockClient.setUri('bob.com')
-        1 * mockClient.getAuth() >> { mockAuth }
-        1 * mockAuth.basic('username', 'password')
-        1 * mockClient.post(_ as Map) >> { Map params ->
-            assert params.body == 'requestBody'
+        1 * mockClient.get(_ as Map) >> { Map params ->
             assert params.contentType == 'contentType'
-            assert params.requestContentType == 'requestContentType'
+            mockResponse
+        }
+        responseCalled
+    }
+
+    def 'Configure and execute a request with a custom input stream response handler'() {
+        setup:
+        def responseCalled = false
+
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            uri = 'bob.com'
+            contentType = 'contentType'
+            responseHandler = { InputStream is ->
+                responseCalled = (is.text == 'called')
+            }
+        }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockResponse = Mock(HttpResponseDecorator) {
+            getEntity() >> {
+                def entity = new BasicHttpEntity()
+                entity.content = new StringInputStream('called')
+                entity
+            }
+        }
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        1 * mockClient.get(_ as Map) >> { Map params ->
+            assert params.contentType == 'contentType'
+            mockResponse
+        }
+        responseCalled
+    }
+
+    def 'Configure and execute a request with a custom data response handler'() {
+        setup:
+        def responseCalled = false
+
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            uri = 'bob.com'
+            contentType = 'contentType'
+            responseHandler = { Map map ->
+                responseCalled = (map.content == 'called')
+            }
+        }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockResponse = Mock(HttpResponseDecorator) {
+            getData() >> {
+                [content: 'called']
+            }
+        }
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        1 * mockClient.get(_ as Map) >> { Map params ->
+            assert params.contentType == 'contentType'
             mockResponse
         }
         responseCalled

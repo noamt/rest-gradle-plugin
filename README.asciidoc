@@ -34,7 +34,7 @@ task attack(type: org._10ne.gradle.rest.RestTask) {
     requestBody = [battleCry: 'FOR LEEROY JENKINS!']
     contentType = groovyx.net.http.ContentType.JSON
     requestHeaders = [customHeader: 'WoW']
-    responseHandler - {
+    responseHandler = {
         //Configured content type is JSON and we let the client's handler parse the response for us
         assert it.message == 'success'
     }

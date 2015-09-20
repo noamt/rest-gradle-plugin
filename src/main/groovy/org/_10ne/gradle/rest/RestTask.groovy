@@ -38,22 +38,43 @@ class RestTask extends DefaultTask {
 
     RESTClient client
 
-    @Input String httpMethod
-    @Input Object uri
     @Input
-    @Optional boolean preemptiveAuth
+    String httpMethod
+
     @Input
-    @Optional String username
+    Object uri
+
     @Input
-    @Optional String password
+    @Optional
+    boolean preemptiveAuth
+
     @Input
-    @Optional Object requestContentType
+    @Optional
+    String username
+
     @Input
-    @Optional Object contentType
+    @Optional
+    String password
+
     @Input
-    @Optional Object requestBody
+    @Optional
+    Object requestContentType
+
     @Input
-    @Optional Object requestHeaders
+    @Optional
+    Object contentType
+
+    @Input
+    @Optional
+    Object requestBody
+
+    @Input
+    @Optional
+    Object requestHeaders
+
+    @Input
+    @Optional
+    Closure responseHandler
 
     HttpResponseDecorator serverResponse
 
@@ -107,8 +128,21 @@ class RestTask extends DefaultTask {
 
         try {
             serverResponse = client."${httpMethod.toLowerCase()}"(params)
-            slf4jLogger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
-        } catch(groovyx.net.http.HttpResponseException e) {
+            if (responseHandler && responseHandler.maximumNumberOfParameters == 1) {
+                def parameterType = responseHandler.parameterTypes.first()
+                if (InputStream.isAssignableFrom(parameterType)) {
+                    responseHandler.call(serverResponse.entity.content)
+                } else if (String.isAssignableFrom(parameterType)) {
+                    serverResponse.entity.content.withStream {
+                        responseHandler.call(it.text)
+                    }
+                } else {
+                    responseHandler.call(serverResponse.data)
+                }
+            } else {
+                slf4jLogger.info "Server Response:" + System.lineSeparator() + serverResponse.getData()
+            }
+        } catch (groovyx.net.http.HttpResponseException e) {
             throw new GradleException(e.getResponse().getData().toString(), e)
         }
     }

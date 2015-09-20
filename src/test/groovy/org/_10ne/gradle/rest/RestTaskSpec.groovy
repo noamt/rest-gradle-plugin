@@ -4,6 +4,8 @@ import groovyx.net.http.AuthConfig
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.RESTClient
 import org.apache.http.HttpHeaders
+import org.apache.http.entity.BasicHttpEntity
+import org.apache.tools.ant.filters.StringInputStream
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -172,5 +174,50 @@ class RestTaskSpec extends Specification {
         protocol | port
         'http' | 8080
         'https' | 8443
+    }
+
+    def 'Configure and execute a request with a custom response handler'() {
+        setup:
+        def responseCalled = false
+
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            httpMethod = 'post'
+            uri = 'bob.com'
+            username = 'username'
+            password = 'password'
+            requestContentType = 'requestContentType'
+            requestBody = 'requestBody'
+            contentType = 'contentType'
+            responseHandler = { String responseText ->
+                responseCalled = (responseText == 'called')
+            }
+        }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockAuth = Mock(AuthConfig)
+
+        def mockResponse = Mock(HttpResponseDecorator) {
+            getEntity() >> {
+                def entity = new BasicHttpEntity()
+                entity.content = new StringInputStream('called')
+                entity
+            }
+        }
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        1 * mockClient.getAuth() >> { mockAuth }
+        1 * mockAuth.basic('username', 'password')
+        1 * mockClient.post(_ as Map) >> { Map params ->
+            assert params.body == 'requestBody'
+            assert params.contentType == 'contentType'
+            assert params.requestContentType == 'requestContentType'
+            mockResponse
+        }
+        responseCalled
     }
 }

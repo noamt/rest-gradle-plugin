@@ -17,9 +17,13 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
         classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '3.0.1')
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.3'
     }
 }
 
@@ -29,6 +33,7 @@ apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'project-reports'
+apply plugin: 'com.gradle.plugin-publish'
 
 group = 'org._10ne.gradle'
 
@@ -108,4 +113,25 @@ publishing {
 
 artifactoryPublish {
     publications(publishing.publications.mainPub)
+}
+
+pluginBundle {
+    website = 'http://www.10ne.org/'
+    vcsUrl = 'https://github.com/noamt/rest-gradle-plugin.git'
+    description = 'A Gradle plugin that provides a task infrastructure to perform REST requests.'
+    
+    plugins {
+        restPlugin {
+            id = 'org.samples.greeting'
+            displayName = 'Gradle Greeting plugin'
+            tags = ['REST', 'API']
+            version = '0.4.0'
+        }
+    }
+
+    mavenCoordinates {
+        groupId = "org._10ne.gradle"
+        artifactId = "rest-gradle-plugin"
+        version = '0.4.0'
+    }
 }

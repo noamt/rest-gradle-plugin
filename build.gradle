@@ -122,8 +122,8 @@ pluginBundle {
     
     plugins {
         restPlugin {
-            id = 'org.samples.greeting'
-            displayName = 'Gradle Greeting plugin'
+            id = 'org.10ne.rest'
+            displayName = 'REST Gradle Plugin'
             tags = ['REST', 'API']
             version = '0.4.1'
         }

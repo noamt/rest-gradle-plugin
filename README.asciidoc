@@ -4,13 +4,9 @@
 
 === Installation ===
 
-This plugin is hosted on Bintray and the latest version is:
-
-image::https://api.bintray.com/packages/noamt/gradle-plugins/REST-Gradle-Plugin/images/download.png[link="https://bintray.com/noamt/gradle-plugins/REST-Gradle-Plugin/_latestVersion"]
-
 image:https://travis-ci.org/noamt/rest-gradle-plugin.svg?branch=master["Build Status", link="https://travis-ci.org/noamt/rest-gradle-plugin"]
 
-See the http://plugins.gradle.org/plugin/org.10ne.rest[Gradle Plugin Portal] for installation instructions.
+See the http://plugins.gradle.org/plugin/org.tenne.rest[Gradle Plugin Portal] for installation instructions.
 
 === Usage ===
 

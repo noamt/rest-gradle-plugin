@@ -125,13 +125,13 @@ pluginBundle {
             id = 'org.samples.greeting'
             displayName = 'Gradle Greeting plugin'
             tags = ['REST', 'API']
-            version = '0.4.0'
+            version = '0.4.1'
         }
     }
 
     mavenCoordinates {
         groupId = "org._10ne.gradle"
         artifactId = "rest-gradle-plugin"
-        version = '0.4.0'
+        version = '0.4.1'
     }
 }

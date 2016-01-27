@@ -94,7 +94,7 @@ class RestTask extends DefaultTask {
 
     @TaskAction
     void executeRequest() {
-        if (!uri || StringUtils.isBlank(uri)) {
+        if (!uri || StringUtils.isBlank(uri.toString())) {
             throw new InvalidUserDataException('No resource URI provided')
         }
 

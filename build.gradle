@@ -122,7 +122,7 @@ pluginBundle {
     
     plugins {
         restPlugin {
-            id = 'org._10ne.rest'
+            id = 'org.tenne.rest'
             displayName = 'REST Gradle Plugin'
             tags = ['REST', 'API']
             version = '0.4.1'

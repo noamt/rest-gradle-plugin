@@ -35,6 +35,9 @@ apply plugin: 'com.gradle.plugin-publish'
 
 group = 'org._10ne.gradle'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 repositories {
     jcenter()
 }
@@ -42,7 +45,7 @@ repositories {
 dependencies {
     compile gradleApi()
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
-    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1') {
+    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }

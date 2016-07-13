@@ -97,7 +97,7 @@ pluginBundle {
             id = 'org.tenne.rest'
             displayName = 'REST Gradle Plugin'
             tags = ['REST', 'API']
-            version = '0.4.2'
+            version = '0.5.0'
         }
     }
 

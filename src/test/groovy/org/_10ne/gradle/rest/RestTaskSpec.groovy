@@ -45,9 +45,7 @@ class RestTaskSpec extends Specification {
             requestBody = 'requestBody'
             contentType = 'contentType'
 
-            doLast({
-                println serverResponse.getData()
-            })
+            doLast({ println serverResponse.getData() })
         }
         def mockClient = Mock(RESTClient)
         task.client = mockClient
@@ -166,9 +164,38 @@ class RestTaskSpec extends Specification {
         then:
         1 * mockClient.setUri('bob.com')
         1 * mockClient.setProxy('www.abc.com', port, protocol)
-        1 * mockClient.post(_ as Map) >> { Map params ->
-            mockResponse
+        1 * mockClient.post(_ as Map) >> { Map params -> mockResponse }
+
+        where:
+        protocol | port
+        'http' | 8080
+        'https' | 8443
+    }
+
+    def 'Configure and execute a request using ignoring current proxy settings'() {
+        setup:
+        System.setProperty("${protocol}.proxyHost", 'www.abc.com')
+        System.setProperty("${protocol}.proxyPort", port.toString())
+        Task task = project.tasks.create(name: 'request', type: RestTask) {
+            ignoreProxySettings = true
+            httpMethod = 'post'
+            uri = 'bob.com'
+            requestContentType = 'requestContentType'
+            requestBody = 'requestBody'
+            contentType = 'contentType'
         }
+        def mockClient = Mock(RESTClient)
+        task.client = mockClient
+
+        def mockResponse = Mock(HttpResponseDecorator)
+
+        when:
+        task.executeRequest()
+
+        then:
+        1 * mockClient.setUri('bob.com')
+        0 * mockClient.setProxy('www.abc.com', port, protocol)
+        1 * mockClient.post(_ as Map) >> { Map params -> mockResponse }
 
         where:
         protocol | port
@@ -259,9 +286,7 @@ class RestTaskSpec extends Specification {
         task.client = mockClient
 
         def mockResponse = Mock(HttpResponseDecorator) {
-            getData() >> {
-                [content: 'called']
-            }
+            getData() >> { [content: 'called'] }
         }
 
         when:

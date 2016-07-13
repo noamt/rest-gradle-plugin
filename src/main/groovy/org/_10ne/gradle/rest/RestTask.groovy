@@ -50,6 +50,10 @@ class RestTask extends DefaultTask {
 
     @Input
     @Optional
+    boolean ignoreProxySettings
+
+    @Input
+    @Optional
     String username
 
     @Input
@@ -79,6 +83,7 @@ class RestTask extends DefaultTask {
     HttpResponseDecorator serverResponse
 
     RestTask() {
+        ignoreProxySettings = false
         httpMethod = 'get'
         client = new RESTClient()
     }
@@ -106,8 +111,10 @@ class RestTask extends DefaultTask {
             client.auth.basic(username, password)
         }
 
-        configureProxy('http')
-        configureProxy('https')
+        if(!ignoreProxySettings) {            
+            configureProxy('http')
+            configureProxy('https')
+        }
 
         if (requestHeaders instanceof Map) {
             client.headers.putAll(requestHeaders);

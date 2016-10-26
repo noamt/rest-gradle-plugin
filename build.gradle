@@ -45,7 +45,7 @@ repositories {
 dependencies {
     compile gradleApi()
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
-    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.2') {
+    compile('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
@@ -97,7 +97,7 @@ pluginBundle {
             id = 'org.tenne.rest'
             displayName = 'REST Gradle Plugin'
             tags = ['REST', 'API']
-            version = '0.4.2'
+            version = '0.4.3'
         }
     }
 

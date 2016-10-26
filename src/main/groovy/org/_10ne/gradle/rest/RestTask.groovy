@@ -70,6 +70,10 @@ class RestTask extends DefaultTask {
 
     @Input
     @Optional
+    Object query
+
+    @Input
+    @Optional
     Object requestHeaders
 
     @Input
@@ -122,6 +126,9 @@ class RestTask extends DefaultTask {
         }
         if (requestContentType) {
             params.requestContentType = requestContentType
+        }
+        if (query) {
+            params.query = query
         }
 
         slf4jLogger.info "Executing a '$httpMethod' request to '$uri'"
